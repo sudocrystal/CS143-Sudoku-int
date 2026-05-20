@@ -51,13 +51,12 @@ public class SudokuBoard {
                 }
             }
         }
-
         return true;
     }
 
     private boolean checkRow() {
         for (int r = 0; r < board.length; r++) {
-            Set < Integer > set = new HashSet < > ();
+            Set<Integer> set = new HashSet<>();
             for (int c = 0; c < board[0].length; c++) {
                 int val = board[r][c];
                 if (val != 0) {
@@ -67,14 +66,12 @@ public class SudokuBoard {
                 }
             }
         }
-
-
         return true;
     }
 
     private boolean checkCol() {
         for (int r = 0; r < board.length; r++) {
-            Set < Integer > set = new HashSet < > ();
+            Set<Integer> set = new HashSet<>();
             for (int c = 0; c < board[0].length; c++) {
                 int val = board[c][r];
                 if (val != 0) {
@@ -84,20 +81,16 @@ public class SudokuBoard {
                 }
             }
         }
-
         return true;
     }
 
     private boolean checkBox() {
         for (int boxRow = 0; boxRow < 3; boxRow++) {
-            for (int boxCol = 0; boxCol <
-                3; boxCol++) { // checks the first, second, and third box
-                Set < Integer > set = new HashSet < > ();
+            for (int boxCol = 0; boxCol < 3; boxCol++) {
+                Set<Integer> set = new HashSet<>();
                 for (int r = 0; r < 3; r++) {
-                    for (int c = 0; c <
-                        3; c++) { // checks the first row, then first column of the box
-                        int val = board[boxRow * 3 + r][boxCol * 3 +
-                        c]; // adds the value of the board at the location of [(if in the case box row 0 and row 1 of the box then (0*3+1))]
+                    for (int c = 0; c < 3; c++) {
+                        int val = board[boxRow * 3 + r][boxCol * 3 + c];
                         if (val != 0) {
                             if (set.contains(val))
                                 return false;
@@ -107,7 +100,6 @@ public class SudokuBoard {
                 }
             }
         }
-
         return true;
     }
 
@@ -115,7 +107,7 @@ public class SudokuBoard {
         if (!isValid())
             return false;
 
-        Map < Integer, Integer > map = new HashMap < > ();
+        Map<Integer, Integer> map = new HashMap<>();
 
         for (int r = 0; r < board.length; r++) {
             for (int c = 0; c < board[0].length; c++) {
@@ -132,8 +124,7 @@ public class SudokuBoard {
         }
 
         for (int num = 1; num <= 9; num++) {
-            if (!map.containsKey(num) || map.get(num) !=
-                9) { // this loop goes from 1-9 and checks if the map contains the number and the occurrences the number came up
+            if (!map.containsKey(num) || map.get(num) != 9) {
                 return false;
             }
         }
@@ -147,21 +138,62 @@ public class SudokuBoard {
 
         for (int r = 0; r < board.length; r++) {
             if (r % 3 == 0) {
-                result = result + line;
+                result += line;
             }
             for (int c = 0; c < board[0].length; c++) {
                 if (c % 3 == 0) {
-                    result = result + "| ";
+                    result += "| ";
                 }
                 if (board[r][c] == 0) {
-                    result = result + "- ";
+                    result += "- ";
                 } else {
-                    result = result + board[r][c] + " ";
+                    result += board[r][c] + " ";
                 }
             }
-            result = result + "|\n";
+            result += "|\n";
         }
-        result = result + line;
+        result += line;
         return result;
+    }
+
+    /*
+     * Solves the Sudoku puzzle using recursive backtracking.
+     * Tries numbers 1–9 in empty cells and checks validity.
+     * If a choice fails, it backtracks and tries another.
+     * Returns true if solved, false otherwise.
+     */
+    public boolean solve() {
+        if (!isValid()) {
+            return false;
+        }
+
+        if (isSolved()) {
+            return true;
+        }
+
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+
+                if (board[row][col] == 0) {
+
+                    for (int num = 1; num <= 9; num++) {
+                        board[row][col] = num;
+
+                        if (isValid()) {
+                            if (solve()) {
+                                return true;
+                            }
+                        }
+
+                        // BACKTRACK
+                        board[row][col] = 0;
+                    }
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
