@@ -7,6 +7,18 @@ public class SudokuEngine {
       SudokuBoard board = new SudokuBoard(fileName);  
       System.out.println(board); 
    }
+   if (!board.isValid()) {
+    System.out.println("Board is invalid. Cannot solve.");
+} else if (board.isSolved()) {
+    System.out.println("Board is already solved.");
+} else {
+    if (board.solve()) {
+        System.out.println("Solved!");
+        System.out.println(board);
+    } else {
+        System.out.println("No solution exists.");
+    }
+}
 }
 
 /*
